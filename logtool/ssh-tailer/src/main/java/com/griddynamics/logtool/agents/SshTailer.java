@@ -64,10 +64,10 @@ class WatchingSsh implements Runnable {
         this.host = hostToReadFrom;
         this.user = userToReadFrom;
         this.files = filesToRead;
-        if (filesToRead.indexOf("*") == -1 && filesToRead.indexOf(" ") == -1) {
+        if (filesToRead.indexOf("*") == -1 && filesToRead.indexOf("|") == -1) {
             singleFile = true;
         } else {
-            StringTokenizer stTok = new StringTokenizer(filesToRead, " ");
+            StringTokenizer stTok = new StringTokenizer(filesToRead, "|");
             while (stTok.hasMoreElements()) {
                 String bufSt = stTok.nextToken();
                 if (bufSt.indexOf('*') != -1) {
