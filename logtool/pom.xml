@@ -239,6 +239,7 @@
         <module>ssh-tailer</module>
         <module>fitnesse-tests</module>
         <module>selenium-tests</module>
+        <module>event-processor</module>
     </modules>
 
     <build>
