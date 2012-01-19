@@ -1,5 +1,6 @@
 package com.griddynamics.logtool;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -11,6 +12,10 @@ import java.util.List;
 
 public class EventProcessor {
     private List<Processor> myProcessors;
+
+    public EventProcessor() {
+        this.myProcessors = new LinkedList<Processor>();
+    }
     
     public EventProcessor(List<Processor> processors) {
         this.myProcessors = processors;

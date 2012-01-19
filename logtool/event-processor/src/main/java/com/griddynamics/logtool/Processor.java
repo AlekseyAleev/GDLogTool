@@ -1,5 +1,7 @@
 package com.griddynamics.logtool;
 
+import org.apache.oro.text.regex.*;
+
 /**
  * Created by IntelliJ IDEA.
  * User: aaleev
@@ -9,43 +11,38 @@ package com.griddynamics.logtool;
 
 public class Processor {
     private String myName;
-    private String myPattern;
+    private Pattern myPattern;
+    private PatternMatcher myMatcher;
     private String myTag; //TODO: Think of tag's type - String or something else (it also affects on TaggedMessage class)
     
     public Processor(String name, String pattern, String tag) {
         this.myName = name;
-        this.myPattern = pattern;
         this.myTag = tag;
+        this.myMatcher = new Perl5Matcher();
+        try {
+            this.myPattern = new Perl5Compiler().compile(pattern);
+        } catch(MalformedPatternException e) {
+        }
     }
-    
-    public void setName(String name) {
-        this.myName = name;
-    }
-    
+
     public String getName() {
         return myName;
     }
 
-    public void setPattern(String pattern) {
-        this.myPattern = pattern;
-    }
-
-    public String getPattern() {
+    public Pattern getPattern() {
         return myPattern;
     }
-    
 
-    public void setTag(String tag) {
-        myTag = tag;
-    } 
-    
     public String getTag() {
         return myTag;
     }
 
+    public PatternMatcher getMatcher() {
+        return myMatcher;
+    }
+
     public boolean match(String msg) {
-        //TODO: Implement
-        return true;
+        return (msg == null) ? false : myMatcher.matches(msg, myPattern);
     }
 
 
