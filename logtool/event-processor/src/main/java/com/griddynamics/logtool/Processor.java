@@ -42,7 +42,7 @@ public class Processor {
     }
 
     public boolean match(String msg) {
-        return (msg == null) ? false : myMatcher.matches(msg, myPattern);
+        return msg != null && myMatcher.matches(msg, myPattern);
     }
 
 
