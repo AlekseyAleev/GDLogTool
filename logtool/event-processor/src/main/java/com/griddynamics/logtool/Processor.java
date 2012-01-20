@@ -10,44 +10,44 @@ import org.apache.oro.text.regex.*;
  */
 
 public class Processor {
-    private String myName;
-    private Pattern myPattern;
-    private PatternMatcher myMatcher;
-    private String myTag; //TODO: Think of tag's type - String or something else (it also affects on TaggedMessage class)
+    private String name;
+    private Pattern pattern;
+    private PatternMatcher matcher;
+    private String tag; //TODO: Think of tag's type - String or something else (it also affects on TaggedMessage class)
     
     public Processor(String name, String pattern, String tag) {
-        this.myName = name;
-        this.myTag = tag;
-        this.myMatcher = new Perl5Matcher();
+        this.name = name;
+        this.tag = tag;
+        this.matcher = new Perl5Matcher();
         try {
-            this.myPattern = new Perl5Compiler().compile(pattern);
+            this.pattern = new Perl5Compiler().compile(pattern);
         } catch(MalformedPatternException e) {
         }
     }
 
     public String getName() {
-        return myName;
+        return name;
     }
 
     public Pattern getPattern() {
-        return myPattern;
+        return pattern;
     }
 
     public String getTag() {
-        return myTag;
+        return tag;
     }
 
     public PatternMatcher getMatcher() {
-        return myMatcher;
+        return matcher;
     }
 
     public boolean match(String msg) {
-        return msg != null && myMatcher.matches(msg, myPattern);
+        return msg != null && matcher.matches(msg, pattern);
     }
 
 
     public void tag(TaggedMessage taggedMessage) {
-        taggedMessage.addTag(myTag);
+        taggedMessage.addTag(tag);
     }
 
 }

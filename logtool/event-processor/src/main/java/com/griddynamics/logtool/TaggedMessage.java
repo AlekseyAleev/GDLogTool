@@ -11,27 +11,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TaggedMessage {
-    private String myMessage;
-    private List<String> myTags; //TODO: Think of tags' type - String or something else.
+    private String message;
+    private List<String> tags; //TODO: Think of tags' type - String or something else.
     
     public TaggedMessage(String msg) {
-        this.myMessage = msg;
-        this.myTags = new LinkedList<String>();
+        this.message = msg;
+        this.tags = new LinkedList<String>();
     }
     
     public List<String> getTags() {
-        return myTags;
+        return tags;
     }
     
     public void addTag(String tag) {
-        myTags.add(tag);
+        tags.add(tag);
     }
     
     public String getMessage() {
-        return myMessage;
+        return message;
     }
     
     public void setMessage(String msg) {
-        myMessage = msg;
+        message = msg;
     }
 }

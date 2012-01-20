@@ -11,22 +11,22 @@ import java.util.List;
  */
 
 public class EventProcessor {
-    private List<Processor> myProcessors;
+    private List<Processor> processors;
 
     public EventProcessor() {
-        this.myProcessors = new LinkedList<Processor>();
+        this.processors = new LinkedList<Processor>();
     }
     
     public EventProcessor(List<Processor> processors) {
-        this.myProcessors = processors;
+        this.processors = processors;
     }
     
     public void addProcessor(Processor processor) {
-        myProcessors.add(processor);
+        processors.add(processor);
     }
 
     public List<Processor> getProcessors() {
-        return myProcessors;
+        return processors;
     }
 
     /**
@@ -38,7 +38,7 @@ public class EventProcessor {
      */
     public TaggedMessage process(String msg) {
         TaggedMessage taggedMessage = new TaggedMessage(msg);
-        for (Processor processor : myProcessors) {
+        for (Processor processor : processors) {
             if (processor.match(msg)) {
                 processor.tag(taggedMessage);
             }
