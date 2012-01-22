@@ -11,5 +11,17 @@
 
     <artifactId>event-processor</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>${oroVersion}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junitVersion}</version>
+        </dependency>
+    </dependencies>
 </project>
