@@ -1,6 +1,7 @@
 package com.griddynamics.logtool;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -20,7 +21,7 @@ public class ProcessorParser {
     private Map<String,String> processors = new HashMap();
 
     private String processorConfigParser(String processor) throws MalformedPatternException{
-        String regexp1 = "@(.+?);";
+        String regexp1 = "@(\\w+?);";
         int begin = 0;
         PatternCompiler compiler = new Perl5Compiler();
         Pattern pattern = compiler.compile(regexp1);
@@ -35,22 +36,26 @@ public class ProcessorParser {
                 begin =begin + res.endOffset(1);
             }
         }
-
+        //processor.replace("\\@","@");
         return processor;
     }
     //read all Tokens and put them to the map
     private void loadTokenConfig(String tokenFile) throws IOException{
-        File token = new File(tokenFile);
-        Scanner tokenScanner = new Scanner(token);
+/*        FileInputStream fileStream= new FileInputStream(tokenFile);
+        Properties tokensLoad = new Properties();
+        tokensLoad.load(fileStream);
+        tokens = (Map) tokensLoad;
+*/      File tokenFileStream = new File(tokenFile);
+        Scanner tokenScanner = new Scanner(tokenFileStream);
         while (tokenScanner.hasNextLine()) {
-            String tokenStr;
-            tokenStr = tokenScanner.nextLine();
-            tokenStr = tokenStr.replace("\\", "\\\\");
-            StringTokenizer tokenized = new StringTokenizer(tokenStr, "=");
-            tokens.put(tokenized.nextToken(), tokenized.nextToken());
+            String input = tokenScanner.nextLine();
+            StringTokenizer tokenized = new StringTokenizer(input, "=");
+            tokens.put(tokenized.nextToken(),tokenized.nextToken().replace("\\", "\\\\"));
         }
+
     }
     //end token reading
+
     //read processors and replace all tokens("@<token name>;") to their meaning
     private void loadProcessors(String processorFile) throws IOException, MalformedPatternException{
         File processor = new File(processorFile);
@@ -58,15 +63,17 @@ public class ProcessorParser {
         while (processorScanner.hasNextLine()) {
             String input = processorScanner.nextLine();
             StringTokenizer tokenized = new StringTokenizer(input, "=");
-            tokens.put(tokenized.nextToken(), processorConfigParser(tokenized.nextToken().replace("\\", "\\\\")));
+            String procNameTemp = tokenized.nextToken();
+            String procTemp = tokenized.nextToken().replace("\\", "\\\\");
+            processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@"));
         }
     }
     //end processors reading
 
-    public void load(String processorFile, String tokenFile) throws IOException, MalformedPatternException {
+    public Map<String,String> load(String processorFile, String tokenFile) throws IOException, MalformedPatternException {
         loadTokenConfig(tokenFile);
         loadProcessors(processorFile);
-
+        return processors;
     }
 }
 
