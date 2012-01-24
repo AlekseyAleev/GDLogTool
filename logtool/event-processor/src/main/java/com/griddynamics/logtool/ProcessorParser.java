@@ -36,7 +36,6 @@ public class ProcessorParser {
                 begin =begin + res.endOffset(1);
             }
         }
-        //processor.replace("\\@","@");
         return processor;
     }
     //read all Tokens and put them to the map
@@ -50,7 +49,7 @@ public class ProcessorParser {
         while (tokenScanner.hasNextLine()) {
             String input = tokenScanner.nextLine();
             StringTokenizer tokenized = new StringTokenizer(input, "=");
-            tokens.put(tokenized.nextToken(),tokenized.nextToken().replace("\\", "\\\\"));
+            tokens.put(tokenized.nextToken(),tokenized.nextToken());
         }
 
     }
@@ -64,8 +63,8 @@ public class ProcessorParser {
             String input = processorScanner.nextLine();
             StringTokenizer tokenized = new StringTokenizer(input, "=");
             String procNameTemp = tokenized.nextToken();
-            String procTemp = tokenized.nextToken().replace("\\", "\\\\");
-            processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@"));
+            String procTemp = tokenized.nextToken();
+            processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@").substring(1));
         }
     }
     //end processors reading
