@@ -17,6 +17,7 @@
             <artifactId>oro</artifactId>
             <version>${oroVersion}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -28,6 +29,5 @@
             <version>${junitVersion}</version>
         </dependency>
     </dependencies>
-
 
 </project>
