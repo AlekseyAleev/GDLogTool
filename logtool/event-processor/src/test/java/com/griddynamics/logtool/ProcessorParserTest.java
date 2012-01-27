@@ -25,21 +25,25 @@ public class ProcessorParserTest extends Assert{
     private ProcessorParser parserTest = new ProcessorParser();
     @Before
     public void initial(){
-        processorsExpected.put("proc ","\\d\\d:\\d\\d:\\d\\d\\sthis.is.host\\s\\(\\d*\\)\\s[\\w\\d\\s]+\\s\\@file;:\\d:Exception[\\w\\d\\s:]+[a-z]*;[a-z]*oneMoreRegExp\\@eof");
-        processorsExpected.put("pro ","\\d:this.is.host\\sololo");
-        processorsExpected.put("procTest1 ","\\@some_reg\\s\\d\\d:\\d\\d:\\d\\d\\(\\d*\\)\\@ups;");
-        processorsExpected.put("procTest2 ","@host\\(\\d*\\)\\@sometext1;\\@sometext2;");
+        processorsExpected.put("proc","\\d\\d:\\d\\d:\\d\\d\\sthis.is.host\\s\\(\\d*\\)\\s[\\w\\d\\s]+\\s\\@file;:\\d:Exception[\\w\\d\\s:]+[a-z]*;[a-z]*oneMoreRegExp\\@eof");
+        processorsExpected.put("pro","\\d:this.is.host\\sololo");
+        processorsExpected.put("procTest1","\\@some_reg\\s\\d\\d:\\d\\d:\\d\\d\\(\\d*\\)\\@ups;");
+        processorsExpected.put("procTest2","@host=\\(\\d*\\)\\@sometext1;\\@sometext2;");
     }
     @Test
     public void testProcessorConfigParser () throws IOException,MalformedPatternException{
         processorsActual = parserTest.load(processorFile,tokenFile);
+        //test for parsing
         assertEquals(processorsExpected,processorsActual);
-        String temp = processorsActual.get("pro ");
+        //test end
+        //test for regular expression compiling
+        String temp = processorsActual.get("pro");
         PatternCompiler compiler = new Perl5Compiler();
         Pattern pattern = compiler.compile(temp);
         PatternMatcher matcher = new Perl5Matcher();
         String message = "5:this.is.host ololo";
         assertTrue(matcher.contains(message,pattern));
+        //test end
 
     }
     @After

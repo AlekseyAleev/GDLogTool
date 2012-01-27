@@ -29,7 +29,7 @@ public class ProcessorParser {
 
         while (matcher.contains(processor.substring(begin,processor.length()),pattern)) {
             MatchResult res=matcher.getMatch();
-            if (processor.charAt(begin + res.beginOffset(1) - 2) != '\\') {
+            if ((begin + res.beginOffset(1) - 2 < 0)||(processor.charAt(begin + res.beginOffset(1) - 2) != '\\')) {
                 processor = StringUtils.replace(processor,"@"+res.group(1)+";",tokens.get(res.group(1)));
                 begin =begin + tokens.get(res.group(1)).length();
             }else{
@@ -39,19 +39,23 @@ public class ProcessorParser {
         return processor;
     }
     //read all Tokens and put them to the map
-    private void loadTokenConfig(String tokenFile) throws IOException{
-/*        FileInputStream fileStream= new FileInputStream(tokenFile);
-        Properties tokensLoad = new Properties();
-        tokensLoad.load(fileStream);
-        tokens = (Map) tokensLoad;
-*/      File tokenFileStream = new File(tokenFile);
-        Scanner tokenScanner = new Scanner(tokenFileStream);
-        while (tokenScanner.hasNextLine()) {
-            String input = tokenScanner.nextLine();
-            StringTokenizer tokenized = new StringTokenizer(input, "=");
-            tokens.put(tokenized.nextToken(),tokenized.nextToken());
-        }
+    private void loadTokenConfig(String tokenFile) throws IOException, MalformedPatternException{
+      File tokenFileStream = new File(tokenFile);
+      Scanner tokenScanner = new Scanner(tokenFileStream);
 
+      String regexp = "(.*?)\\s*?=\\s*(.*)";
+      PatternCompiler compiler = new Perl5Compiler();
+      Pattern pattern = compiler.compile(regexp);
+      PatternMatcher matcher = new Perl5Matcher();
+      while (tokenScanner.hasNextLine()) {
+          String input = tokenScanner.nextLine();
+          if (matcher.contains(input,pattern)){
+            MatchResult res=matcher.getMatch();
+            String tokenName = res.group(1);
+            String tokenRegExp = res.group(2);
+            tokens.put(tokenName,tokenRegExp);
+          }
+      }
     }
     //end token reading
 
@@ -59,12 +63,18 @@ public class ProcessorParser {
     private void loadProcessors(String processorFile) throws IOException, MalformedPatternException{
         File processor = new File(processorFile);
         Scanner processorScanner = new Scanner(processor);
+        String regexp = "(.*?)\\s*?=\\s*(.*)";
+        PatternCompiler compiler = new Perl5Compiler();
+        Pattern pattern = compiler.compile(regexp);
+        PatternMatcher matcher = new Perl5Matcher();
         while (processorScanner.hasNextLine()) {
             String input = processorScanner.nextLine();
-            StringTokenizer tokenized = new StringTokenizer(input, "=");
-            String procNameTemp = tokenized.nextToken();
-            String procTemp = tokenized.nextToken();
-            processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@").substring(1));
+            if (matcher.contains(input,pattern)){
+                MatchResult res=matcher.getMatch();
+                String procNameTemp = res.group(1);
+                String procTemp = res.group(2);
+                processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@"));
+            }
         }
     }
     //end processors reading
