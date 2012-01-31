@@ -24,7 +24,16 @@ public class Processor {
         } catch(MalformedPatternException e) {
         }
     }
-
+    public boolean equals(Object obj) {
+        Processor proc= (Processor) obj;
+        return ((this.name.equals(proc.getName())) && (this.tag.equals(proc.getTag())));
+        //it is some shit but matchers and patterns are not equals because it is different objects
+    }
+    public int hashCode(){
+        int hash = 0;
+        hash = hash + this.name.hashCode()+this.tag.hashCode();
+        return hash;
+    }
     public String getName() {
         return name;
     }

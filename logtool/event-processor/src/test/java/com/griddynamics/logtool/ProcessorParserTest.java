@@ -43,9 +43,7 @@ public class ProcessorParserTest extends Assert{
     public void testProcessorConfigParser () throws IOException,MalformedPatternException{
         processorsActual = parserTest.load(processorFile,tokenFile);
         //test for parsing
-
-        assertEquals(processorsExpected.get(0).getName(),processorsActual.get(0).getName());
-
+        assertTrue(processorsExpected.equals(processorsActual));
         //test end
 
     }

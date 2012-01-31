@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.*;
 import org.apache.oro.text.regex.*;
 
 /**
@@ -40,42 +41,22 @@ public class ProcessorParser {
     }
     //read all Tokens and put them to the map
     private void loadingTokenConfig(String tokenFile) throws IOException, MalformedPatternException{
-      File tokenFileStream = new File(tokenFile);
-      Scanner tokenScanner = new Scanner(tokenFileStream);
-
-      String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
-      PatternCompiler compiler = new Perl5Compiler();
-      Pattern pattern = compiler.compile(regexp);
-      PatternMatcher matcher = new Perl5Matcher();
-      while (tokenScanner.hasNextLine()) {
-          String input = tokenScanner.nextLine();
-          if (matcher.contains(input,pattern)){
-            MatchResult res=matcher.getMatch();
-            String tokenName = res.group(1);
-            String tokenRegExp = res.group(2);
-            tokens.put(tokenName,tokenRegExp);
-          }
-      }
+        ConfigLoader loader = new ConfigLoader(tokenFile);
+        List<Pair<String, String>> configList = loader.loadingLikeListOfPairs();
+        for (Pair<String, String> tokenPair: configList){
+            tokens.put(tokenPair.getLeft(),tokenPair.getRight());
+        }
     }
     //end token reading
 
     //read processors and replace all tokens("@<token name>;") to their meaning
     private void loadingProcessors(String processorFile) throws IOException, MalformedPatternException{
-        File processorFileObject = new File(processorFile);
-        Scanner processorScanner = new Scanner(processorFileObject);
-        String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
-        PatternCompiler compiler = new Perl5Compiler();
-        Pattern pattern = compiler.compile(regexp);
-        PatternMatcher matcher = new Perl5Matcher();
-        while (processorScanner.hasNextLine()) {
-            String input = processorScanner.nextLine();
-            if (matcher.contains(input,pattern)){
-                MatchResult res=matcher.getMatch();
-                String procNameTemp = res.group(1);
-                String procTemp = res.group(2);
-                Processor processor = new Processor(procNameTemp, processorConfigParsing(procTemp).replace("\\\\@","@"),procNameTemp);
-                processors.add(processor);
-            }
+        ConfigLoader loader = new ConfigLoader(processorFile);
+        List<Pair<String, String>> configList = loader.loadingLikeListOfPairs();
+        for (Pair<String, String> processorPair: configList){
+            String processorParsedRegExp = processorConfigParsing(processorPair.getRight());
+            String processorName = processorPair.getLeft();
+            processors.add(new Processor(processorName,processorParsedRegExp,processorName));
         }
     }
     //end processors reading
