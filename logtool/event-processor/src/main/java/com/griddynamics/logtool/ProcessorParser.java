@@ -1,7 +1,6 @@
 package com.griddynamics.logtool;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -18,9 +17,10 @@ import org.apache.oro.text.regex.*;
 public class ProcessorParser {
 
     private Map<String,String> tokens = new HashMap();
-    private Map<String,String> processors = new HashMap();
+    //private Map<String,String> processors = new HashMap();
+    private List<Processor> processors = new LinkedList<Processor>();
 
-    private String processorConfigParser(String processor) throws MalformedPatternException{
+    private String processorConfigParsing(String processor) throws MalformedPatternException{
         String regexp1 = "@(\\w+?);";
         int begin = 0;
         PatternCompiler compiler = new Perl5Compiler();
@@ -39,11 +39,11 @@ public class ProcessorParser {
         return processor;
     }
     //read all Tokens and put them to the map
-    private void loadTokenConfig(String tokenFile) throws IOException, MalformedPatternException{
+    private void loadingTokenConfig(String tokenFile) throws IOException, MalformedPatternException{
       File tokenFileStream = new File(tokenFile);
       Scanner tokenScanner = new Scanner(tokenFileStream);
 
-      String regexp = "(.*?)\\s*?=\\s*(.*)";
+      String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
       PatternCompiler compiler = new Perl5Compiler();
       Pattern pattern = compiler.compile(regexp);
       PatternMatcher matcher = new Perl5Matcher();
@@ -60,10 +60,10 @@ public class ProcessorParser {
     //end token reading
 
     //read processors and replace all tokens("@<token name>;") to their meaning
-    private void loadProcessors(String processorFile) throws IOException, MalformedPatternException{
-        File processor = new File(processorFile);
-        Scanner processorScanner = new Scanner(processor);
-        String regexp = "(.*?)\\s*?=\\s*(.*)";
+    private void loadingProcessors(String processorFile) throws IOException, MalformedPatternException{
+        File processorFileObject = new File(processorFile);
+        Scanner processorScanner = new Scanner(processorFileObject);
+        String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
         PatternCompiler compiler = new Perl5Compiler();
         Pattern pattern = compiler.compile(regexp);
         PatternMatcher matcher = new Perl5Matcher();
@@ -73,15 +73,16 @@ public class ProcessorParser {
                 MatchResult res=matcher.getMatch();
                 String procNameTemp = res.group(1);
                 String procTemp = res.group(2);
-                processors.put(procNameTemp, processorConfigParser(procTemp).replace("\\\\@","@"));
+                Processor processor = new Processor(procNameTemp, processorConfigParsing(procTemp).replace("\\\\@","@"),procNameTemp);
+                processors.add(processor);
             }
         }
     }
     //end processors reading
 
-    public Map<String,String> load(String processorFile, String tokenFile) throws IOException, MalformedPatternException {
-        loadTokenConfig(tokenFile);
-        loadProcessors(processorFile);
+    public List<Processor> load(String processorFile, String tokenFile) throws IOException, MalformedPatternException {
+        loadingTokenConfig(tokenFile);
+        loadingProcessors(processorFile);
         return processors;
     }
 }
