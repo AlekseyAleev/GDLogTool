@@ -1,13 +1,12 @@
 package com.griddynamics.logtool;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import junit.framework.Assert;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.oro.text.regex.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,13 +15,13 @@ import org.junit.*;
  * Time: 20:05
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessorParserTest extends Assert{
+public class ProcessorParserTest {
 
     private List<Processor> processorsActual = new LinkedList<Processor>();
     private List<Processor> processorsExpected = new LinkedList<Processor>();
     private String processorFile = "patternLib.conf";
     private String tokenFile = "token.conf";
-    private ProcessorParser parserTest = new ProcessorParser();
+    private ProcessorConfigParser parserTest = new ProcessorConfigParser();
     @Before
     public void initial(){
         Processor testProcessor = new Processor("pro", "\\d:this.is.host\\sololo","pro");
