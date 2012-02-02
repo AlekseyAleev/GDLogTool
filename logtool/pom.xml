@@ -53,6 +53,7 @@
         <coberturaVersion>1.9.4.1</coberturaVersion>
         <jbossResteasyVersion>2.2.1.GA</jbossResteasyVersion>
         <oroVersion>2.0.8</oroVersion>
+
     </properties>
 
     <dependencyManagement>
@@ -226,12 +227,17 @@
                 <artifactId>resteasy-spring</artifactId>
                 <version>${jbossResteasyVersion}</version>
             </dependency>
-
             <dependency>
                 <groupId>oro</groupId>
                 <artifactId>oro</artifactId>
                 <version>${oroVersion}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

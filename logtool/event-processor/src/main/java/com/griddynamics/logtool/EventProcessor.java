@@ -1,7 +1,11 @@
 package com.griddynamics.logtool;
 
+
+import java.util.Properties;
+
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +15,7 @@ import java.util.List;
  */
 
 public class EventProcessor {
+
     private List<Processor> processors;
 
     public EventProcessor() {
@@ -46,4 +51,5 @@ public class EventProcessor {
 
         return taggedMessage;
     }
+
 }
