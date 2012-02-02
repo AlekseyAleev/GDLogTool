@@ -43,7 +43,9 @@ public class SyslogHandlerTest {
         procList.add(new Processor("Processor1", ".*bullshit.*", "simple"));
         procList.add(new Processor("Processor1", ".*2011-09-07.*", "containsDate"));
         procList.add(new Processor("Processor1", ".*bullshit!!bullshit!!.*", "lessSimple"));
-        EventProcessor mockedEventProcessor = spy(new EventProcessor(procList));
+        EventProcessor spied = new EventProcessor();
+        spied.setProcessors(procList);
+        EventProcessor mockedEventProcessor = spy(spied);
         String regexp = "[^|]*[ ]*[|][ ]*([a-zA-Z0-9_\\.\\-]+)[ ]*[|][ ]*([a-zA-Z0-9_\\.\\-]+)[ ]*[|][ ]*((?:.+[ ]*[|][ ]*)?((?:(?:[0-3][0-9] [JFMASOND][a-z]{2} 2[0-9]{3})?|(?:2[0-9]{3}-[0-1][0-9]-[0-3][0-9])?)? ?[0-2][0-9]:[0-5][0-9]:[0-5][0-9],[0-9]{3})[ ]*[|][ ]*.+)[\n]?";
         Map<String, Integer> groups = new HashMap<String, Integer>();
         groups.put("application", 1);

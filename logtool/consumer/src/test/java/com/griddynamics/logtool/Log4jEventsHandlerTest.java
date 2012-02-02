@@ -37,7 +37,9 @@ public class Log4jEventsHandlerTest {
         List<Processor> procList = new LinkedList<Processor>();
         procList.add(new Processor("Processor1", ".*Test.*", "testMessage"));
         procList.add(new Processor("Processor1", ".*", "anyMessage"));
-        EventProcessor mockedEventProcessor = spy(new EventProcessor(procList));
+        EventProcessor spied = new EventProcessor();
+        spied.setProcessors(procList);
+        EventProcessor mockedEventProcessor = spy(spied);
         testHandler = new Log4jEventsHandler(mockedStorage, mockedSearch, mockedEventProcessor, mockedChannelGroup);
     }
 

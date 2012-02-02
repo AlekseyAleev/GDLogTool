@@ -14,16 +14,12 @@ import java.util.Map;
 public class EventProcessor {
     private List<Processor> processors;
 
-    public EventProcessor() {
-        this.processors = new LinkedList<Processor>();
-    }
-
-    public EventProcessor(List<Processor> processors) {
-        this.processors = processors;
-    }
-
     public void addProcessor(Processor processor) {
         processors.add(processor);
+    }
+    
+    public void setProcessors(List<Processor> processors) {
+        this.processors = processors;
     }
 
     public List<Processor> getProcessors() {

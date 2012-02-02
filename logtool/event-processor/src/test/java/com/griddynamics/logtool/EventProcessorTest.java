@@ -3,6 +3,7 @@ package com.griddynamics.logtool;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -17,6 +18,7 @@ public class EventProcessorTest {
     @Test
     public void testProcess() {
         EventProcessor ep = new EventProcessor();
+        ep.setProcessors(new LinkedList<Processor>());
         for (int i = 1; i <= 5; ++i) {
             if (i % 2 == 0) {
                 ep.addProcessor(new Processor("Processor " + i, "even", "Tag " + i));

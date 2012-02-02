@@ -61,7 +61,7 @@ public class Log4jEventsHandler extends SimpleChannelHandler {
                 if(o instanceof LoggingEvent) {
                     LoggingEvent loggingEvent = (LoggingEvent) o;
                     String message = timeFormatter.print(loggingEvent.timeStamp) + " " + loggingEvent.getMessage().toString();
-                    TaggedMessage taggedMsg = eventProcessor.process(message);
+                    TaggedMessage taggedMsg = eventProcessor.process(loggingEvent.getMessage().toString());
                     DateTime date = new DateTime(loggingEvent.timeStamp);
                     String timestamp = date.toString(dateTimeFormatter);
                     Map<String, String> doc = new LinkedHashMap<String, String>();
