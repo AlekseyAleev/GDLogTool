@@ -20,14 +20,16 @@ public class SyslogServerHandler extends SimpleChannelHandler {
     private final Storage storage;
     private final SearchServer searchServer;
     private final MessageParser messageParser;
+    private final EventProcessor eventProcessor;
     private ChannelGroup allChannels;
 
     public SyslogServerHandler(Storage storage, SearchServer searchServer,
-                               String regexp, Map<String,Integer> groups, ChannelGroup allChannels) {
+                               String regexp, Map<String,Integer> groups, EventProcessor eventProcessor, ChannelGroup allChannels) {
         this.storage = storage;
         this.searchServer = searchServer;
         this.allChannels = allChannels;
         this.messageParser = new MessageParser(regexp,groups);
+        this.eventProcessor = eventProcessor;
 
     }
 
@@ -53,7 +55,9 @@ public class SyslogServerHandler extends SimpleChannelHandler {
         while (buf.readable()) {
             receivedMessage.append((char) buf.readByte());
         }
-        Map<String,String> msg = messageParser.parseMessage(receivedMessage.toString());
+
+        TaggedMessage taggedMsg = eventProcessor.process(receivedMessage.toString());
+        Map<String,String> msg = messageParser.parseMessage(taggedMsg.getMessage());
         msg.put("host", host);
         if(msg.get("content") == null){
             msg.put("content",receivedMessage.toString());
@@ -69,6 +73,7 @@ public class SyslogServerHandler extends SimpleChannelHandler {
         path[2] = msg.get("instance");
         msg.putAll(storage.addMessage(path, msg.get("timestamp"), msg.get("content")));
         msg.put("timestamp", msg.get("timestamp") + "Z");
+        EventProcessor.putTagsToMap(taggedMsg, msg); //add tag fields
         searchServer.index(msg);
     }
 

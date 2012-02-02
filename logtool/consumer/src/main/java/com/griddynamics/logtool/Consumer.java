@@ -27,6 +27,7 @@ public class Consumer {
     private Storage storage;
     private SearchServer searchServer;
     private boolean testMode = false;
+    private EventProcessor eventProcessor;
 
     public void setLog4jPort(int log4jPort) {
         this.log4jPort = log4jPort;
@@ -40,6 +41,10 @@ public class Consumer {
         this.searchServer = searchServer;
     }
 
+    public void setEventProcessor(EventProcessor eventProcessor) {
+        this.eventProcessor = eventProcessor;
+    }
+
     public void setTestMode(boolean testMode) {
         this.testMode = testMode;
     }
@@ -49,12 +54,12 @@ public class Consumer {
     }
 
     public void startLog4j() {
-        log4jEventsServer = new Log4jEventsServer(log4jPort, storage, searchServer, testMode);
+        log4jEventsServer = new Log4jEventsServer(log4jPort, storage, searchServer, eventProcessor, testMode);
         log4jEventsServer.intitialize();
     }
 
     public SyslogServer startSyslog(int port, final String regexp, final Map<String, Integer> groups) {
-        SyslogServer syslogServer = new SyslogServer(port, regexp, groups, storage, searchServer, testMode);
+        SyslogServer syslogServer = new SyslogServer(port, regexp, groups, storage, searchServer, eventProcessor, testMode);
         syslogServer.initialize();
         return syslogServer;
     }

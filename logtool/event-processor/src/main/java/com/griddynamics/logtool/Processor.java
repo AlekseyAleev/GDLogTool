@@ -1,6 +1,8 @@
 package com.griddynamics.logtool;
 
 import org.apache.oro.text.regex.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,6 +12,7 @@ import org.apache.oro.text.regex.*;
  */
 
 public class Processor {
+    private static final Logger logger = LoggerFactory.getLogger(Processor.class);
     private String name;
     private Pattern pattern;
     private PatternMatcher matcher;
@@ -22,6 +25,7 @@ public class Processor {
         try {
             this.pattern = new Perl5Compiler().compile(pattern);
         } catch(MalformedPatternException e) {
+            logger.error(e.getMessage(), e);
         }
     }
 

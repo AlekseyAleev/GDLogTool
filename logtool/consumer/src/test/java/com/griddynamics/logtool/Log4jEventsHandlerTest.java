@@ -13,10 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.*;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -30,15 +27,18 @@ public class Log4jEventsHandlerTest {
     private Storage mockedStorage;
     private SearchServer mockedSearch;
     private Log4jEventsHandler testHandler;
-    private ChannelGroup mockedChannelGroup;  
-    
+    private ChannelGroup mockedChannelGroup;
 
     @Before
     public void init() {
         mockedStorage = mock(Storage.class);
         mockedSearch = mock(SearchServer.class);
         mockedChannelGroup = mock(ChannelGroup.class);
-        testHandler = new Log4jEventsHandler(mockedStorage, mockedSearch, mockedChannelGroup);
+        List<Processor> procList = new LinkedList<Processor>();
+        procList.add(new Processor("Processor1", ".*Test.*", "testMessage"));
+        procList.add(new Processor("Processor1", ".*", "anyMessage"));
+        EventProcessor mockedEventProcessor = spy(new EventProcessor(procList));
+        testHandler = new Log4jEventsHandler(mockedStorage, mockedSearch, mockedEventProcessor, mockedChannelGroup);
     }
 
     @Test
@@ -83,6 +83,8 @@ public class Log4jEventsHandlerTest {
         mapToVerify.put("timestamp", indexFormatter.print(datetime));
         mapToVerify.put("level", Level.INFO.toString());
         mapToVerify.put("port", "4444");
+        mapToVerify.put("tag1", "testMessage");
+        mapToVerify.put("tag2", "anyMessage");
         verify(mockedSearch).index(mapToVerify);
     }
 }

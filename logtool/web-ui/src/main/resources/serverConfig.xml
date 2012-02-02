@@ -5,12 +5,14 @@
 
     <import resource="fileStorageConfiguration.xml"/>
     <import resource="searchServerConfig.xml"/>
+    <import resource="eventProcessorConfig.xml"/>
 
     <bean id="consumer" class="com.griddynamics.logtool.Consumer" init-method="startServers" destroy-method="stopServers">
         <property name="storage" ref="fileStorage"/>
         <property name="searchServer" ref="searchServer"/>
         <property name="log4jPort" value="4444"/>
         <property name="testMode" value="false"/>
+        <property name="eventProcessor" ref="eventProcessor"/>
     </bean>
 
     <bean id="Rest" class="com.griddynamics.logtool.LogRest">

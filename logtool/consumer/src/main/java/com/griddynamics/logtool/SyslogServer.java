@@ -20,9 +20,9 @@ public class SyslogServer {
     private final Map<String, Integer> groups;
 
     public SyslogServer(int port, final String regexp, final Map<String, Integer> groups,
-                        Storage storage, SearchServer searchServer, boolean testMode) {
+                        Storage storage, SearchServer searchServer, EventProcessor eventProcessor, boolean testMode) {
         SimpleChannelHandler syslogServerHandler =
-                new SyslogServerHandler(storage, searchServer, regexp, groups, allChannels);
+                new SyslogServerHandler(storage, searchServer, regexp, groups, eventProcessor, allChannels);
         if(testMode) {
             this.channelHandler = new HandlerMonitor(syslogServerHandler);
         } else {
