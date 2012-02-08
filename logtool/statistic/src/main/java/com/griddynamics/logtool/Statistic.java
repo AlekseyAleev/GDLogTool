@@ -1,5 +1,8 @@
 package com.griddynamics.logtool;
 import org.apache.solr.common.util.NamedList;
+
+import java.util.LinkedHashMap;
+
 /**
  * Created by IntelliJ IDEA.
  * User: avyshkin
@@ -10,12 +13,19 @@ import org.apache.solr.common.util.NamedList;
 public class Statistic {
     private StatisticResult statisticResult;//this is result
 
-    public Statistic(NamedList<String> list,Integer stepDiscretization,String date){
-        makeStatistic(list,stepDiscretization,date);
+    public Statistic(LinkedHashMap<String,Object> map,Integer stepDiscretization,String startDate,String endDate){
+        makeStatistic(map,stepDiscretization,startDate,endDate);
     }
-
-    public StatisticResult makeStatistic(NamedList<String> list,Integer stepDiscretization,String date) {
-        //this method should make statistic
+    /*
+    * This method make solor requests and calculate statistic
+    * @param map - linked map of field names and values
+    * @param stepDiscretization - step of date discretization
+    * @param startDate - date to start
+    * @param endDate - date to end
+    *
+    * @return result of statistic
+    */
+    public StatisticResult makeStatistic(LinkedHashMap<String,Object> map,Integer stepDiscretization,String startDate,String endDate) {
         return statisticResult;
     }
     public StatisticResult getStatisticResult(){
