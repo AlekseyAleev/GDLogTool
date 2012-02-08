@@ -39,6 +39,10 @@
             <artifactId>search-server</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.griddynamics.logtool</groupId>
+            <artifactId>event-processor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>

@@ -11,14 +11,14 @@ import static org.junit.Assert.*;
  */
 public class ProcessorTest {
     @Test
-    public void constructorTest() {
+    public void testConstructor() {
         Processor proc = new Processor("simpleProcessor", "randomnumber\\d+", "simpleTag");
-        assertEquals(proc.getName(), "simpleProcessor");
-        assertEquals(proc.getTag(), "simpleTag");
+        assertEquals("simpleProcessor", proc.getName());
+        assertEquals("simpleTag", proc.getTag());
     }
-    
+
     @Test
-    public void matchTest() {
+    public void testMatch() {
         Processor proc = new Processor("Processor", "randomNumber\\d+", "Tag");
         assertTrue(proc.match("randomNumber5"));
         assertTrue(proc.match("randomNumber20"));
@@ -33,12 +33,12 @@ public class ProcessorTest {
     }
 
     @Test
-    public void tagTest() {
+    public void testTag() {
         Processor proc = new Processor("Processor", "\\d\\d\\d", "New tag");
         TaggedMessage msg = new TaggedMessage("This is message");
-        assertEquals(msg.getTags().size(), 0);
+        assertEquals(0, msg.getTags().size());
         proc.tag(msg);
-        assertEquals(msg.getTags().size(), 1);
-        assertEquals(msg.getTags().get(0), "New tag");
+        assertEquals(1, msg.getTags().size());
+        assertEquals("New tag", msg.getTags().get(0));
     }
 }

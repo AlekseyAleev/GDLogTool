@@ -1,11 +1,15 @@
 package com.griddynamics.logtool;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import junit.framework.Assert;
 import org.apache.oro.text.regex.*;
 import org.junit.*;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,6 +26,20 @@ public class ProcessorParserTest {
     private String processorFile = "patternLib.conf";
     private String tokenFile = "token.conf";
     private ProcessorConfigParser parserTest = new ProcessorConfigParser();
+
+    String getPropertiesPath(){
+        java.security.ProtectionDomain pd =
+                ProcessorParserTest.class.getProtectionDomain();
+        if ( pd == null ) return null;
+        java.security.CodeSource cs = pd.getCodeSource();
+        if ( cs == null ) return null;
+        java.net.URL url = cs.getLocation();
+        if ( url == null ) return null;
+        java.io.File f = new File( url.getFile() );
+
+        return f.getParent() + System.getProperty("file.separator") + "resources";
+    }
+
     @Before
     public void initial(){
         Processor testProcessor = new Processor("pro", "\\d:this.is.host\\sololo","pro");
@@ -39,6 +57,7 @@ public class ProcessorParserTest {
         processorsExpected.add(testProcessor);
     }
     @Test
+    @Ignore
     public void testProcessorConfigParser () throws IOException,MalformedPatternException{
         processorsActual = parserTest.load(processorFile,tokenFile);
         //test for parsing

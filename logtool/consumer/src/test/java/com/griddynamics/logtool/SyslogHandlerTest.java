@@ -34,18 +34,25 @@ public class SyslogHandlerTest {
     private SyslogServerHandler testHandler;
     private ChannelGroup mockedChannelGroup;
 
-        @Before
+    @Before
     public void init() {
         mockedStorage = mock(Storage.class);
         mockedSearch = mock(SearchServer.class);
         mockedChannelGroup = mock(ChannelGroup.class);
+        List<Processor> procList = new LinkedList<Processor>();
+        procList.add(new Processor("Processor1", ".*bullshit.*", "simple"));
+        procList.add(new Processor("Processor1", ".*2011-09-07.*", "containsDate"));
+        procList.add(new Processor("Processor1", ".*bullshit!!bullshit!!.*", "lessSimple"));
+        EventProcessor spied = new EventProcessor();
+        spied.setProcessors(procList);
+        EventProcessor mockedEventProcessor = spy(spied);
         String regexp = "[^|]*[ ]*[|][ ]*([a-zA-Z0-9_\\.\\-]+)[ ]*[|][ ]*([a-zA-Z0-9_\\.\\-]+)[ ]*[|][ ]*((?:.+[ ]*[|][ ]*)?((?:(?:[0-3][0-9] [JFMASOND][a-z]{2} 2[0-9]{3})?|(?:2[0-9]{3}-[0-1][0-9]-[0-3][0-9])?)? ?[0-2][0-9]:[0-5][0-9]:[0-5][0-9],[0-9]{3})[ ]*[|][ ]*.+)[\n]?";
         Map<String, Integer> groups = new HashMap<String, Integer>();
         groups.put("application", 1);
         groups.put("instance", 2);
         groups.put("content", 3);
         groups.put("timestamp", 4);
-        testHandler = new SyslogServerHandler(mockedStorage, mockedSearch, regexp, groups, mockedChannelGroup);
+        testHandler = new SyslogServerHandler(mockedStorage, mockedSearch, regexp, groups, mockedEventProcessor, mockedChannelGroup);
     }
 
     @Test
@@ -79,12 +86,15 @@ public class SyslogHandlerTest {
         testHandler.messageReceived(testCtx, testMessage);
         verify(mockedStorage, times(1)).addMessage(pathToVerify, "2011-09-07T14:31:02" , someMsg );
 
-                Map<String, String> mapToVerify = new LinkedHashMap<String, String>();
+        Map<String, String> mapToVerify = new LinkedHashMap<String, String>();
         mapToVerify.put("application", pathToVerify[0]);
         mapToVerify.put("host", pathToVerify[1]);
         mapToVerify.put("instance", pathToVerify[2]);
         mapToVerify.put("content", someMsg);
         mapToVerify.put("timestamp", "2011-09-07T14:31:02" + "Z");
+        mapToVerify.put("tag1", "simple");
+        mapToVerify.put("tag2", "containsDate");
+        mapToVerify.put("tag3", "lessSimple");
         verify(mockedSearch).index(mapToVerify);
 
     }

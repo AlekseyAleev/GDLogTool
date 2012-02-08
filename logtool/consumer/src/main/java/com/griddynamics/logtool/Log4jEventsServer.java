@@ -17,8 +17,8 @@ public class Log4jEventsServer {
     private final ChannelGroup allChannels = new DefaultChannelGroup("log4j-server");
     private int bindChannelId;
 
-    public Log4jEventsServer(int port, Storage storage, SearchServer searchServer, boolean testMode) {
-        SimpleChannelHandler channelHandler = new Log4jEventsHandler(storage, searchServer, allChannels);
+    public Log4jEventsServer(int port, Storage storage, SearchServer searchServer, EventProcessor eventProcessor, boolean testMode) {
+        SimpleChannelHandler channelHandler = new Log4jEventsHandler(storage, searchServer, eventProcessor, allChannels);
         if(testMode) {
             this.channelHandler = new HandlerMonitor(channelHandler);
         } else {

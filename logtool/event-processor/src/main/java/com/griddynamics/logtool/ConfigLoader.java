@@ -21,9 +21,13 @@ public class ConfigLoader {
     public ConfigLoader(String fileName){
         this.fileName = fileName;
     }
-    public List<Pair<String, String>> loadingLikeListOfPairs() throws IOException,MalformedPatternException{
-        File tokenFileStream = new File(fileName);
+    public List<Pair<String, String>> loadingLikeListOfPairs() throws IOException, MalformedPatternException{
+        String path = new File("").getAbsolutePath();
+        String fs = System.getProperty("file.separator");
+        String confPath = path + fs + "configurator" + fs + fileName;
+        File tokenFileStream = new File(confPath);
         Scanner tokenScanner = new Scanner(tokenFileStream);
+
 
         String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
         PatternCompiler compiler = new Perl5Compiler();

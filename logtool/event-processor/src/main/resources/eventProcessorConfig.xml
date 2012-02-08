@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="processorFactory" class="com.griddynamics.logtool.ProcessorConfigParser"/>
+    <bean id="processorsList" factory-bean="processorFactory" factory-method="load">
+        <constructor-arg name="processorFile" value="patternLib.conf"/>
+        <constructor-arg name="tokenFile" value="token.conf"/>
+    </bean>
+    <bean id="eventProcessor" class="com.griddynamics.logtool.EventProcessor">
+        <property name="processors" ref="processorsList"/>
+    </bean>
+</beans>
