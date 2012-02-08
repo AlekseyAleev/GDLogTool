@@ -13,7 +13,7 @@ public interface SearchServer {
      * Indexes fields contained in Map<String, String> on search server
      * @param fields - Collection of field names and its values
      */
-    void index(Map<String, String> fields);
+    void index(Map<String, Object> fields);
 
     /**
      * Retrieves entries from search server by some query

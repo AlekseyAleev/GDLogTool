@@ -86,15 +86,17 @@ public class SyslogHandlerTest {
         testHandler.messageReceived(testCtx, testMessage);
         verify(mockedStorage, times(1)).addMessage(pathToVerify, "2011-09-07T14:31:02" , someMsg );
 
-        Map<String, String> mapToVerify = new LinkedHashMap<String, String>();
+        Map<String, Object> mapToVerify = new LinkedHashMap<String, Object>();
         mapToVerify.put("application", pathToVerify[0]);
         mapToVerify.put("host", pathToVerify[1]);
         mapToVerify.put("instance", pathToVerify[2]);
         mapToVerify.put("content", someMsg);
         mapToVerify.put("timestamp", "2011-09-07T14:31:02" + "Z");
-        mapToVerify.put("tag1", "simple");
-        mapToVerify.put("tag2", "containsDate");
-        mapToVerify.put("tag3", "lessSimple");
+        List<String> tags = new LinkedList<String>();
+        tags.add("simple");
+        tags.add("containsDate");
+        tags.add("lessSimple");
+        mapToVerify.put("tags", tags);
         verify(mockedSearch).index(mapToVerify);
 
     }

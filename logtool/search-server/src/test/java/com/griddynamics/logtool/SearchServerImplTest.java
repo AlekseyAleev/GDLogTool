@@ -30,7 +30,7 @@ public class SearchServerImplTest {
         solrDir.mkdir();
         searchServer = new SearchServerImpl(solrDir.getAbsolutePath(), 100, 300000);
         
-        Map<String, String> doc = new HashMap<String, String>();
+        Map<String, Object> doc = new HashMap<String, Object>();
         doc.put("path", "some path");
         doc.put("startIndex", "0");
         doc.put("length", "100");
@@ -40,7 +40,7 @@ public class SearchServerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testIncorrectIndex() {
-        Map<String, String> incorrectDoc = new HashMap<String, String>();
+        Map<String, Object> incorrectDoc = new HashMap<String, Object>();
         incorrectDoc.put("path", "some path");
         searchServer.index(incorrectDoc);
     }

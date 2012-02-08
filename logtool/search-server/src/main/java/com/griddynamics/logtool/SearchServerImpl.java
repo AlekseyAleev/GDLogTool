@@ -63,7 +63,7 @@ public class SearchServerImpl implements SearchServer {
     }
 
     @Override
-    public void index(Map<String, String> fields) throws IllegalArgumentException {
+    public void index(Map<String, Object> fields) throws IllegalArgumentException {
         if(!fields.containsKey("path") || !fields.containsKey("startIndex") || !fields.containsKey("length") ||
                 !fields.containsKey("content")) {
             throw new IllegalArgumentException("Missing one or more required fields");
