@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,20 @@ public class SearchServerImplTest {
         doc.put("startIndex", "0");
         doc.put("length", "100");
         doc.put("content", "Test message");
+        List<String> tags = new LinkedList<String>();
+        tags.add("exception");
+        tags.add("serverFailure");
+        tags.add("loginFailure");
+        doc.put("tags", tags);
         searchServer.index(doc);
+
+        Map<String, Object> emptyTagsDoc = new HashMap<String, Object>();
+        emptyTagsDoc.put("path", "another path");
+        emptyTagsDoc.put("startIndex", "0");
+        emptyTagsDoc.put("length", "100");
+        emptyTagsDoc.put("content", "Test message");
+        emptyTagsDoc.put("tags", new LinkedList<String>());
+        searchServer.index(emptyTagsDoc);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -59,6 +73,22 @@ public class SearchServerImplTest {
             assertTrue(entry.get("startIndex").equals("0"));
             assertTrue(entry.get("length").equals("100"));
             assertTrue(entry.get("content").equals("Test message"));
+        }
+    }
+    
+    @Test
+    public void testIndexAndSearchTags() {
+        List<Map<String, String>> result = searchServer.search("path:\"some path\"", -1, 0, "", "");
+        for(Map<String, String> entry : result) {
+            assertTrue(entry.get("tags").equals("[exception, serverFailure, loginFailure]"));
+        }
+    }
+
+    @Test
+    public void testIndexAndSearchEmptyTags() {
+        List<Map<String, String>> result = searchServer.search("path:\"another path\"", -1, 0, "", "");
+        for(Map<String, String> entry : result) {
+            assertNull(entry.get("tags"));
         }
     }
 
