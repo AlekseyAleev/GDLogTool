@@ -1,6 +1,8 @@
 package com.griddynamics.logtool;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,17 +12,21 @@ import java.util.LinkedHashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class StatisticQuery {
-    private LinkedHashMap<String,Object> map;
+    private Map map;
     private Integer stepDiscretization;
     private String startDate;
     private String endDate;
-    public StatisticQuery(LinkedHashMap map,Integer stepDiscretization,String startDate,String endDate){
+    /*
+    *   startDate and endDate is date in solr date format
+    *   stepDiscretization - is a number of parts into which time period divided
+    */
+    public StatisticQuery(Map map,Integer stepDiscretization,String startDate,String endDate){
         this.map = map;
         this.stepDiscretization = stepDiscretization;
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public LinkedHashMap<String,Object> getMap(){
+    public Map getMap(){
         return map;
     }
     public Integer getStepDiscretization(){

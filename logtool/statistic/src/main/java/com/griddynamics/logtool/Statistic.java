@@ -2,6 +2,7 @@ package com.griddynamics.logtool;
 import org.apache.solr.common.util.NamedList;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -19,5 +20,5 @@ public interface Statistic {
     * @return - Vector of results
     *
      */
-    public Vector makeStatistic(StatisticQuery query);
+    public List makeStatistic(StatisticQuery query);
 }
