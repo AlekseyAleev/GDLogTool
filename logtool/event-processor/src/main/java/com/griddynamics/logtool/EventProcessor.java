@@ -43,23 +43,4 @@ public class EventProcessor {
 
         return taggedMessage;
     }
-
-    /**
-     * This method takes all tags from tagged message and put them to the map.
-     *
-     * @param taggedMsg
-     * @param map
-     */
-    public static void putTagsToMap(TaggedMessage taggedMsg, Map<String, String> map) {
-        /**
-         * Current implementation with "tagN" as a tag field name where N is the index of current tag
-         * in taggedMsg's tag list.
-         */
-        if (taggedMsg != null && map != null) {
-            int tagNumber = 1;
-            for (String tag : taggedMsg.getTags()) {
-                map.put("tag" + tagNumber++, tag);
-            }
-        }
-    }
 }

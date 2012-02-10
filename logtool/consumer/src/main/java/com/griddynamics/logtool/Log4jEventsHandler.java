@@ -64,7 +64,7 @@ public class Log4jEventsHandler extends SimpleChannelHandler {
                     TaggedMessage taggedMsg = eventProcessor.process(loggingEvent.getMessage().toString());
                     DateTime date = new DateTime(loggingEvent.timeStamp);
                     String timestamp = date.toString(dateTimeFormatter);
-                    Map<String, String> doc = new LinkedHashMap<String, String>();
+                    Map<String, Object> doc = new LinkedHashMap<String, Object>();
                     doc.put("application", getApplication(loggingEvent));
                     doc.put("host", host);
                     doc.put("instance", getInstance(loggingEvent));
@@ -75,7 +75,7 @@ public class Log4jEventsHandler extends SimpleChannelHandler {
                     doc.put("timestamp", indexFormatter.print(loggingEvent.timeStamp));
                     doc.put("level", loggingEvent.getLevel().toString());
                     doc.put("port", port);
-                    EventProcessor.putTagsToMap(taggedMsg, doc); //add tag fields
+                    doc.put("tags", taggedMsg.getTags());
                     searchServer.index(doc);
                 } else {
                     throw new IllegalArgumentException("Recieved message contains not wrong data");
