@@ -13,14 +13,11 @@ import java.util.Vector;
  */
 public interface Statistic {
     /*
-    * This method make solor requests and calculate statistic
-    * @param map - linked map of field names and values
-    * @param stepDiscretization - step of date discretization
-    * @param startDate - date to start
-    * @param endDate - date to end
+    * This method make statistic
+    * @param query - Statistic query
     *
-    * @return result of statistic
-    */
+    * @return - Vector of results
+    *
+     */
     public Vector makeStatistic(StatisticQuery query);
-    public Vector getStatisticResult();
 }
