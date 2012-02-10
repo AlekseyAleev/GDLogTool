@@ -43,28 +43,4 @@ public class EventProcessorTest {
         assertEquals("Tag 3", oddTaggedMsg.getTags().get(1));
         assertEquals("Tag 5", oddTaggedMsg.getTags().get(2));
     }
-
-    @Test
-    public void testPutTagsToMap() {
-        TaggedMessage msg = new TaggedMessage("Message");
-        msg.addTag("unknownHost");
-        msg.addTag("unknownThread");
-        msg.addTag("unknownTime");
-        msg.addTag("SimpleMessage");
-        Map<String, String> map = new HashMap<String, String>();
-
-        EventProcessor.putTagsToMap(msg, map);
-
-        assertEquals(4, map.values().size());
-
-        assertTrue(map.keySet().contains("tag1"));
-        assertTrue(map.keySet().contains("tag2"));
-        assertTrue(map.keySet().contains("tag3"));
-        assertTrue(map.keySet().contains("tag4"));
-
-        assertTrue(map.values().contains("unknownHost"));
-        assertTrue(map.values().contains("unknownThread"));
-        assertTrue(map.values().contains("unknownTime"));
-        assertTrue(map.values().contains("SimpleMessage"));
-    }
 }
