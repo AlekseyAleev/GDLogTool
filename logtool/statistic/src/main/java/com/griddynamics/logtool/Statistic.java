@@ -20,5 +20,5 @@ public interface Statistic {
     * @return - Vector of results
     *
      */
-    public List<Integer> makeStatistic(StatisticQuery query);
+    public StatisticResult makeStatistic(StatisticQuery query);
 }
