@@ -331,7 +331,7 @@ Ext.onReady(function() {
                 if(facetFilter != '') {
                     facetFilter = facetFilter + 'AND ';
                 }
-                facetFilter = facetFilter + key + ':(' + filters[key] + ') ';
+                facetFilter = facetFilter + key + ':' + filters[key] + ' ';
             }
             display.toggleSourceEdit(false);
             if(searchField.getValue()) {

@@ -93,6 +93,9 @@ public class SearchServerImpl implements SearchServer {
             solrQuery.setSortField(sortField, SolrQuery.ORDER.valueOf(order));
         } else {
             solrQuery.setRows(Integer.MAX_VALUE);
+            if (!sortField.equals("") && !order.equals("")) {
+                solrQuery.setSortField(sortField, SolrQuery.ORDER.valueOf(order));
+            }
         }
 
         QueryResponse resp = search0(solrQuery);
