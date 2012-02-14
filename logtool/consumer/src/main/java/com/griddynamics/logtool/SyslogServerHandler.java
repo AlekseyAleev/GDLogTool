@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -57,7 +58,9 @@ public class SyslogServerHandler extends SimpleChannelHandler {
         }
 
         TaggedMessage taggedMsg = eventProcessor.process(receivedMessage.toString());
-        Map<String,String> msg = messageParser.parseMessage(taggedMsg.getMessage());
+        Map<String,String> parsedMsg = messageParser.parseMessage(taggedMsg.getMessage());
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.putAll(parsedMsg);
         msg.put("host", host);
         if(msg.get("content") == null){
             msg.put("content",receivedMessage.toString());
@@ -68,12 +71,12 @@ public class SyslogServerHandler extends SimpleChannelHandler {
            msg.put("timestamp",timestamp);
         }
         String [] path = new String[3];
-        path[0] = msg.get("application");
-        path[1] = host;
-        path[2] = msg.get("instance");
-        msg.putAll(storage.addMessage(path, msg.get("timestamp"), msg.get("content")));
+        path[0] = (String)msg.get("application");
+        path[1] = (String)host;
+        path[2] = (String)msg.get("instance");
+        msg.putAll(storage.addMessage(path, (String)msg.get("timestamp"), (String)msg.get("content")));
         msg.put("timestamp", msg.get("timestamp") + "Z");
-        EventProcessor.putTagsToMap(taggedMsg, msg); //add tag fields
+        msg.put("tags", taggedMsg.getTags());
         searchServer.index(msg);
     }
 

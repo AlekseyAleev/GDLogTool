@@ -77,7 +77,7 @@ public class Log4jEventsHandlerTest {
         message = timeFormatter.print(datetime) + " " + message;
         verify(mockedStorage).addMessage(pathToVerify, timestamp, message);
 
-        Map<String, String> mapToVerify = new LinkedHashMap<String, String>();
+        Map<String, Object> mapToVerify = new LinkedHashMap<String, Object>();
         mapToVerify.put("application", pathToVerify[0]);
         mapToVerify.put("host", pathToVerify[1]);
         mapToVerify.put("instance", pathToVerify[2]);
@@ -85,8 +85,10 @@ public class Log4jEventsHandlerTest {
         mapToVerify.put("timestamp", indexFormatter.print(datetime));
         mapToVerify.put("level", Level.INFO.toString());
         mapToVerify.put("port", "4444");
-        mapToVerify.put("tag1", "testMessage");
-        mapToVerify.put("tag2", "anyMessage");
+        List<String> tags = new LinkedList<String>();
+        tags.add("testMessage");
+        tags.add("anyMessage");
+        mapToVerify.put("tags", tags);
         verify(mockedSearch).index(mapToVerify);
     }
 }
