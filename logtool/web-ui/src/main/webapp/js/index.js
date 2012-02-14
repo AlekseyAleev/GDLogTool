@@ -1003,6 +1003,16 @@ Ext.onReady(function() {
         }
     });
 
+    var statisticsBtn = Ext.create('Ext.button.Button', {
+        text: 'Statistics',
+        anchor: '100%',
+        listeners: {
+                click: function() {
+                    window.location= loc + "/statistics.html";
+                }
+        }
+    });
+
     var stuffPanel = Ext.create('Ext.form.Panel', {
         id: 'stuff-panel',
         title: 'Extras',
@@ -1043,7 +1053,7 @@ Ext.onReady(function() {
                 items: [
                     {
                         layout: 'anchor',
-                        columnWidth: .7,
+                        columnWidth: .4,
                         border: false,
                         items: [
                             {
@@ -1051,6 +1061,13 @@ Ext.onReady(function() {
                                 bodyStyle: 'border-color: #FFFFFF;'
                             }
                         ]
+                    },
+                    {
+                        layout: 'anchor',
+                        columnWidth: .3,
+                        bodyPadding: '0 0 0 5',
+                        border: false,
+                        items: [statisticsBtn]
                     },
                     {
                         layout: 'anchor',
