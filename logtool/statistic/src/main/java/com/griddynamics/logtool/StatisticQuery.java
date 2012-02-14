@@ -2,6 +2,7 @@ package com.griddynamics.logtool;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class StatisticQuery {
-    private Map<String,String> query;
+    private Map<String,List<String>> query;
     private Integer stepDiscretization;
     private String startDate;
     private String endDate;
@@ -20,13 +21,13 @@ public class StatisticQuery {
     *   startDate and endDate is date in solr date format
     *   stepDiscretization - is a number of parts into which time period divided
     */
-    public StatisticQuery(Map<String,String> query,Integer stepDiscretization,String startDate,String endDate){
+    public StatisticQuery(Map<String,List<String>> query,Integer stepDiscretization,String startDate,String endDate){
         this.query = query;
         this.stepDiscretization = stepDiscretization;
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public Map<String,String> getQuery(){
+    public Map<String,List<String>> getQuery(){
         return query;
     }
     public Integer getStepDiscretization(){
