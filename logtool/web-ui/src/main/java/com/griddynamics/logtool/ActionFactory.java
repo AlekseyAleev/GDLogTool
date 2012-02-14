@@ -38,6 +38,11 @@ public class ActionFactory {
             PerformanceAction pa = new PerformanceAction();
             pa.setConsumer(consumer);
             return pa;
+        } else if (actionName.equalsIgnoreCase("statistic")) {
+            StatisticAction statisticAction = new StatisticAction();
+            statisticAction.setConsumer(consumer);
+            statisticAction.setSearchServer(searchServer);
+            return statisticAction;
         } else {
             throw new RuntimeException(" was unable to find an action named '" + actionName + "'.");
         }
