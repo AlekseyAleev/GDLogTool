@@ -33,14 +33,12 @@ public class StatisticAction extends Action{
         HashMap<String,List<String>> map  = new HashMap<String,List<String>>();
         for (String pair: splitStrings){
             String[]fields = pair.split(":");
-            if (fields.length > 1){
-                if(map.containsKey(fields[0])){
-                    map.get(fields[0]).add(fields[1]);
-                } else {
-                    LinkedList<String> list = new LinkedList<String>();
-                    list.add(fields[1]);
-                    map.put(fields[0],list);
-                }
+            if(map.containsKey(fields[0])){
+                map.get(fields[0]).add(fields[1]);
+            } else {
+                LinkedList<String> list = new LinkedList<String>();
+                list.add(fields[1]);
+                map.put(fields[0],list);
             }
         }
         return map;

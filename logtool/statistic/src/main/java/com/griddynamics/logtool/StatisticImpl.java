@@ -26,17 +26,14 @@ public class StatisticImpl implements Statistic{
         for (String key : map.keySet()) {
           String oneTagQuery = "";
           for (String value : map.get(key)) {
-            oneTagQuery += key + ":" + value + " OR ";
+            oneTagQuery += key + ":" + value + " AND ";
           }
-          query = oneTagQuery.substring(0, oneTagQuery.length() - 4);
-          query += " AND ";
         }
         DateTime dt = new DateTime(startTime);
         String startTimeString = timeFormatter.print(dt);
         dt = new DateTime(endTime);
         String endTimeString = timeFormatter.print(dt);
         query = query + "timestamp:[" + startTimeString + " TO " + endTimeString +  "]";
-        //query = query.substring(0, query.length() - 5);
         return query;
     }
     public StatisticResult makeStatistic(StatisticQuery query){

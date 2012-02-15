@@ -17,6 +17,7 @@ public class StatisticQuery {
     private Integer stepDiscretization;
     private String startDate;
     private String endDate;
+    private List<String> association;
     /*
     *   startDate and endDate is date in solr date format
     *   stepDiscretization - is a number of parts into which time period divided
@@ -39,4 +40,5 @@ public class StatisticQuery {
     public String getEndDate(){
         return endDate;
     }
+
 }
