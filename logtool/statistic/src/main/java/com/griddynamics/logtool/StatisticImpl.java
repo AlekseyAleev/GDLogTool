@@ -28,6 +28,7 @@ public class StatisticImpl implements Statistic{
           for (String value : map.get(key)) {
             oneTagQuery += key + ":" + value + " AND ";
           }
+          query += oneTagQuery;
         }
         DateTime dt = new DateTime(startTime);
         String startTimeString = timeFormatter.print(dt);
@@ -41,9 +42,10 @@ public class StatisticImpl implements Statistic{
         List<String> time = new LinkedList<String>();
         DateTime startTime = new DateTime(query.getStartDate());
         DateTime endTime = new DateTime(query.getEndDate());
-        long timePart = (startTime.getMillis() - endTime.getMillis()) / query.getStepDiscretization();
-
-        for (long i= startTime.getMillis();i<endTime.getMillis();i = i + timePart){
+        long startMillis = startTime.getMillis();
+        long endMillis = endTime.getMillis();
+        long timePart = (endMillis - startMillis) / query.getStepDiscretization();
+        for (long i = startMillis; i < endMillis; i += timePart){
             DateTime timeForList = new DateTime(i+timePart/2);
             time.add(timeFormatter.print(timeForList));
             List<Map<String,String>> list = searchServer.search(makeRequest(query.getQuery(),i,i + timePart),-1,-1,"timestamp","asc");

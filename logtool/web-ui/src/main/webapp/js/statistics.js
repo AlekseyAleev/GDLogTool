@@ -210,13 +210,6 @@ Ext.onReady(function(){
         if (host != "") statisticQuery += ' host:' + host;
         if (application != "") statisticQuery += ' application' + application;
         if (instance != "") statisticQuery += ' instance' + instance;
-//        var sd = "";
-//        var fieldValues = filtersPanel.getForm().getValues();
-//        for (value in fieldValues) {
-//            sd += /*fieldValues[value] + */' ';
-//        }
-//        sd = sd.substring(0, sd.length() - 1);
-//        queryField.setValue(sd);
         return statisticQuery;
     }
 
