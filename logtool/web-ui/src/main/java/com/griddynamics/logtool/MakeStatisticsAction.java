@@ -28,7 +28,7 @@ public class MakeStatisticsAction extends Action{
 
         StatisticQuery statisticQuery = new StatisticQuery(makeStatQuery(query),step,startDate,endDate);
         StatisticResult result = statistic.makeStatistic(statisticQuery);
-        sos.print(getJsonFromList(result.getStatistic()));
+        sos.print(getJsonFromList(result.getStatistic(),result.getTime()));
     }
     public Map<String,List<String>> makeStatQuery(String query){
         String[] splitStrings = query.split("\\s");
@@ -45,10 +45,13 @@ public class MakeStatisticsAction extends Action{
         }
         return map;
     }
-    public String getJsonFromList(List<Integer> list){
+    public String getJsonFromList(List<Integer> list,List<String> timeList){
         StringBuilder stringBuilder = new StringBuilder("{\"statistic\":[");
         for(Integer number:list){
             stringBuilder.append(number.toString()).append(", ");
+        }
+        for(String time:timeList){
+            stringBuilder.append(time).append(", ");
         }
         int index = stringBuilder.lastIndexOf(", ");
         if (index > -1) {
