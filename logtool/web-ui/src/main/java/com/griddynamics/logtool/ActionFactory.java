@@ -39,10 +39,10 @@ public class ActionFactory {
             pa.setConsumer(consumer);
             return pa;
         } else if (actionName.equalsIgnoreCase("makeStatistics")) {
-            MakeStatisticsAction msa = new MakeStatisticsAction();
-            msa.setStorage(storage);
-            msa.setSearchServer(searchServer);
-            return msa;
+            MakeStatisticsAction statisticAction = new MakeStatisticsAction();
+            statisticAction.setConsumer(consumer);
+            statisticAction.setSearchServer(searchServer);
+            return statisticAction;
         } else {
             throw new RuntimeException(" was unable to find an action named '" + actionName + "'.");
         }

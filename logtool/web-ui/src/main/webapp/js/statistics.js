@@ -80,19 +80,6 @@ Ext.onReady(function(){
             formBind: true, //only enabled once the form is valid
             disabled: true,
             handler: makeStatistics
-//            function() {
-//                var form = this.up('form').getForm();
-//                if (form.isValid()) {
-//                    form.submit({
-//                        success: function(form, action) {
-//                           Ext.Msg.alert('Success', action.result.msg);
-//                        },
-//                        failure: function(form, action) {
-//                            Ext.Msg.alert('Failed', action.result.msg);
-//                        }
-//                    });
-//                }
-//            }
         }],
     });
 
@@ -201,7 +188,6 @@ Ext.onReady(function(){
             method: 'GET',
             success: function (result, request) {
                 statisticResult = Ext.decode(result.responseText);
-                queryField.setValue(statisticResult);
                 Ext.MessageBox.alert('Success', result.responseText);
             },
             failure: function (result, request) {
@@ -224,15 +210,13 @@ Ext.onReady(function(){
         if (host != "") statisticQuery += ' host:' + host;
         if (application != "") statisticQuery += ' application' + application;
         if (instance != "") statisticQuery += ' instance' + instance;
-//        var sd = 'it is query:  ';
+//        var sd = "";
 //        var fieldValues = filtersPanel.getForm().getValues();
 //        for (value in fieldValues) {
-//            sd += /*fieldValues[value] + */' AND ';
+//            sd += /*fieldValues[value] + */' ';
 //        }
-//        sd = sd.substring(0, sd.length() - 5);
-//        queryField.setValue(statisticQuery);
+//        sd = sd.substring(0, sd.length() - 1);
 //        queryField.setValue(sd);
-//        return sd;
         return statisticQuery;
     }
 
