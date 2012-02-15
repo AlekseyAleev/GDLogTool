@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,33 @@ public class StatisticAction extends Action{
 
     }
     public Map<String,List<String>> makeStatQuery(String query){
-        return new HashMap<String,List<String>>();
+        String[] splitStrings = query.split("\\s");
+        HashMap<String,List<String>> map  = new HashMap<String,List<String>>();
+        for (String pair: splitStrings){
+            String[]fields = pair.split(":");
+            if (fields.length > 1){
+                if(map.containsKey(fields[0])){
+                    map.get(fields[0]).add(fields[1]);
+                } else {
+                    LinkedList<String> list = new LinkedList<String>();
+                    list.add(fields[1]);
+                    map.put(fields[0],list);
+                }
+            }
+        }
+        return map;
+    }
+    public String getJsonFromList(List<Integer> list){
+        StringBuilder stringBuilder = new StringBuilder("{\"statistic\":[");
+        for(Integer number:list){
+            stringBuilder.append(number.toString()).append(", ");
+        }
+        int index = stringBuilder.lastIndexOf(", ");
+        if (index > -1) {
+            stringBuilder.replace(index, index + 2, "");
+        }
+        stringBuilder.append("]}");
+        return stringBuilder.toString();
     }
 
 }

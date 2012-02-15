@@ -13,9 +13,9 @@ Ext.onReady(function(){
 
 	var filtersGrid = Ext.create('Ext.form.Panel', {
 	    frame:true,
-        bodyStyle:'padding: 0',
+        bodyStyle:'padding: 5',
         width: '100%',
-        height: '100%',
+        height: '50%',
         layout:'column',
     });
 
@@ -27,17 +27,17 @@ Ext.onReady(function(){
 
     var graphViewer = Ext.create('Ext.form.Panel', {
             frame:true,
-            bodyStyle:'padding: 0',
+            bodyStyle:'padding: 3',
             width: '100%',
-            height: '100%',
+            height: '50%',
             layout:'column',
         });
 
     var statisticsPanel = Ext.create('Ext.form.Panel', {
         frame:true,
-        bodyStyle:'padding: 0',
-        width: '100%',
-        height: '100%',
+        bodyStyle:'padding: 5',
+        width: '50%',
+        height: '50%',
         layout:'column',
 
         items: [{
