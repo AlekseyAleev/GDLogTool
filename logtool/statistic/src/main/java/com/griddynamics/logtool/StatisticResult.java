@@ -10,11 +10,16 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class StatisticResult {
-    public List<Integer> resultList;
-    public StatisticResult(List<Integer> resultList){
+    private List<Integer> resultList;
+    private List<String> time;
+    public StatisticResult(List<Integer> resultList,List<String> time){
         this.resultList = resultList;
+        this.time = time;
     }
-    public List<Integer> returnAsList(){
+    public List<Integer> getStatistic(){
         return resultList;
+    }
+    public List<String> getTime(){
+        return time;
     }
 }

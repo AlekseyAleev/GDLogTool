@@ -38,8 +38,8 @@ public class ActionFactory {
             PerformanceAction pa = new PerformanceAction();
             pa.setConsumer(consumer);
             return pa;
-        } else if (actionName.equalsIgnoreCase("statistic")) {
-            StatisticAction statisticAction = new StatisticAction();
+        } else if (actionName.equalsIgnoreCase("makeStatistics")) {
+            MakeStatisticsAction statisticAction = new MakeStatisticsAction();
             statisticAction.setConsumer(consumer);
             statisticAction.setSearchServer(searchServer);
             return statisticAction;

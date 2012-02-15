@@ -38,14 +38,17 @@ public class StatisticImpl implements Statistic{
     }
     public StatisticResult makeStatistic(StatisticQuery query){
         List<Integer> result = new LinkedList<Integer>();
+        List<String> time = new LinkedList<String>();
         DateTime startTime = new DateTime(query.getStartDate());
         DateTime endTime = new DateTime(query.getEndDate());
         long timePart = (startTime.getMillis() - endTime.getMillis()) / query.getStepDiscretization();
 
         for (long i= startTime.getMillis();i<endTime.getMillis();i = i + timePart){
-            List<Map<String,String>> list = searchServer.search(makeRequest(query.getQuery(),i,i + timePart),-1,-1,"","");
+            DateTime timeForList = new DateTime(i+timePart/2);
+            time.add(timeFormatter.print(timeForList));
+            List<Map<String,String>> list = searchServer.search(makeRequest(query.getQuery(),i,i + timePart),-1,-1,"timestamp","asc");
             result.add(new Integer(list.size()));
         }
-        return new StatisticResult(result);
+        return new StatisticResult(result,time);
     }
 }

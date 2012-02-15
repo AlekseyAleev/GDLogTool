@@ -16,17 +16,19 @@ import java.util.Map;
  * Time: 18:20
  * To change this template use File | Settings | File Templates.
  */
-public class StatisticAction extends Action{
+public class MakeStatisticsAction extends Action{
     public void perform(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletOutputStream sos = response.getOutputStream();
         Statistic statistic = new StatisticImpl(searchServer);
+
         String query = request.getParameter("query");
         Integer step = Integer.parseInt(request.getParameter("step"));
         String startDate  = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
+
         StatisticQuery statisticQuery = new StatisticQuery(makeStatQuery(query),step,startDate,endDate);
         StatisticResult result = statistic.makeStatistic(statisticQuery);
-
+        sos.print(getJsonFromList(result.getStatistic()));
     }
     public Map<String,List<String>> makeStatQuery(String query){
         String[] splitStrings = query.split("\\s");
