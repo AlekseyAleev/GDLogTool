@@ -47,6 +47,10 @@
             <artifactId>event-processor</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.griddynamics.logtool</groupId>
+            <artifactId>statistic</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
         </dependency>

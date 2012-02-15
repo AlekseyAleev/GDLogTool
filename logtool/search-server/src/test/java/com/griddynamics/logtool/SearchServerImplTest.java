@@ -214,6 +214,12 @@ public class SearchServerImplTest {
     }
 
     @Test
+    public void testIndexAndSearchMultipleTagsWithoutQuotes() {
+        List<Map<String, String>> result = searchServer.search("tags:serverFailure AND tags:exception5", -1, 0, "length", "asc");
+        assertEquals(2, result.size());
+    }
+
+    @Test
     public void testDelete() {
         searchServer.delete("path:\"some path\"");
         List<Map<String, String>> result = searchServer.search("path:\"some path\"", -1, 0, "", "");
