@@ -96,7 +96,7 @@ Ext.onReady(function(){
     }
 
 	var filtersPanel = Ext.create('Ext.form.Panel', {
-        bodyPadding: 5,
+        bodyPadding: 20,
         height: 600,
         layout: 'anchor',
         defaults: {

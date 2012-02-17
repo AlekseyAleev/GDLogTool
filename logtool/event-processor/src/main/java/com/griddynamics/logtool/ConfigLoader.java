@@ -6,6 +6,7 @@ import org.apache.oro.text.regex.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -24,9 +25,17 @@ public class ConfigLoader {
     public List<Pair<String, String>> loadingLikeListOfPairs() throws IOException, MalformedPatternException{
         String path = new File("").getAbsolutePath();
         String fs = System.getProperty("file.separator");
-        String confPath = path + fs + "configurator" + fs + fileName;
+        String confPath = path + fs + fileName;
         File tokenFileStream = new File(confPath);
-        Scanner tokenScanner = new Scanner(tokenFileStream);
+        Scanner tokenScanner;
+        if (!tokenFileStream.exists()) {
+            InputStream in = ConfigLoader.class.getResourceAsStream(System.getProperty("file.separator") + fileName);
+            tokenScanner = new Scanner(in);
+        } else if (!tokenFileStream.isFile()) {
+            throw new IOException("config file exists and not a file");
+        } else {
+            tokenScanner = new Scanner(tokenFileStream);
+        }
 
 
         String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
