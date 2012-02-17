@@ -164,6 +164,7 @@ Ext.onReady(function(){
         }],
     });
 
+    //Be careful! Due to timeformatters there are different timezones and incorrect time representation.
     var customDateWindow = Ext.create('Ext.window.Window', {
         title: 'Custom date',
         layout: 'anchor',
@@ -177,7 +178,7 @@ Ext.onReady(function(){
                 fieldLabel: 'From date',
                 format: 'Y-m-d',
                 allowBlank: false,
-                editable: false,
+                editable: true,
                 maxValue: new Date(),
                 value: new Date(),
                 anchor: '100%'
@@ -187,7 +188,7 @@ Ext.onReady(function(){
                 fieldLabel: 'From time',
                 format: 'H:i:s',
                 allowBlank: false,
-                editable: false,
+                editable: true,
                 value: new Date(),
                 anchor: '100%'
             }, {
@@ -195,7 +196,7 @@ Ext.onReady(function(){
                 id: 'to-date-field',
                 fieldLabel: 'To date',
                 format: 'Y-m-d',
-                editable: false,
+                editable: true,
                 maxValue: new Date(),
                 value: new Date(),
                 anchor: '100%'
@@ -204,7 +205,7 @@ Ext.onReady(function(){
                 id: 'to-time-field',
                 fieldLabel: 'To time',
                 format: 'H:i:s',
-                editable: false,
+                editable: true,
                 value: new Date(),
                 anchor: '100%'
             }
@@ -233,6 +234,33 @@ Ext.onReady(function(){
     var store = Ext.create('Ext.data.JsonStore', {
         fields:['time', 'count'],
         data: generateData()
+    });
+
+    var pieChart = Ext.create('Ext.chart.Chart', {
+        animate: true,
+        shadow: true,
+        store: store,
+        style: 'background:#fff',
+        shadow: true,
+        legend: {
+        position: 'right'
+        },
+        series: [{
+            type: 'pie',
+            showInLegend: true,
+            field: ['count'],
+            label: {
+                field: 'time',
+                display: 'rotate',
+                contrast: true,
+                font: '18px Arial'
+            },
+            highlight: {
+                segment: {
+                    margin: 20
+                }
+            }
+        }]
     });
 
     var columnChart = Ext.create('Ext.chart.Chart', {
@@ -271,10 +299,19 @@ Ext.onReady(function(){
         }]
     });
 
-
-    var chartPanel = Ext.create('Ext.form.Panel', {
+    var pieChartPanel = Ext.create('Ext.form.Panel', {
         frame:true,
-        width: '50%',
+        columnWidth: 1/2,
+        height: 600,
+        bodyStyle:'padding: 0',
+        title: 'Pie Chart',
+        layout: 'fit',
+        items: [pieChart]
+    });
+
+    var columnChartPanel = Ext.create('Ext.form.Panel', {
+        frame:true,
+        columnWidth: 1/2,
         height: 600,
         bodyStyle:'padding: 0',
         title: 'Column Chart',
@@ -294,7 +331,7 @@ Ext.onReady(function(){
             width: '100%',
             height: '100%',
             layout:'column',
-            items: [chartPanel]
+            items: [columnChartPanel]
     });
 //
     var statisticsPanel = Ext.create('Ext.form.Panel', {
@@ -311,7 +348,8 @@ Ext.onReady(function(){
 		},{
 		    title: 'Statistics browser',
 		    columnWidth: 7/10,
-		    items: [chartPanel]
+		    layout:'column',
+		    items: [columnChartPanel, pieChartPanel]
 		}],
 		dockedItems : [{
 			xtype : 'toolbar',
