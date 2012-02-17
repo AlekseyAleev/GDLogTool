@@ -317,7 +317,7 @@ Ext.onReady(function() {
         if(fromDate.validate() || fromTime.validate()) {
             if(!fromDate.validate()) {
                 fromDate.setValue(toDate.getValue());
-            } else {
+            } else if (!fromTime.validate()){
                 fromTime.setValue(toTime.getValue());
             }
             var fromValue = fromDate.getSubmitValue() + 'T' + fromTime.getSubmitValue() + 'Z';

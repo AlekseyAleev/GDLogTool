@@ -31,7 +31,7 @@ public class MakeStatisticsAction extends Action{
         sos.print(getJsonFromList(result.getStatistic(),result.getTime()));
     }
     public Map<String,List<String>> makeStatQuery(String query){
-        String[] splitStrings = query.split("\\s");
+        String[] splitStrings = query.split("\\|");
         HashMap<String,List<String>> map  = new HashMap<String,List<String>>();
         for (String pair: splitStrings){
             String[]fields = pair.split(":");
@@ -46,18 +46,18 @@ public class MakeStatisticsAction extends Action{
         return map;
     }
     public String getJsonFromList(List<Integer> list,List<String> timeList){
-        StringBuilder stringBuilder = new StringBuilder("{\"statistic\":[");
+        StringBuilder stringBuilder = new StringBuilder("['");
         for(Integer number:list){
-            stringBuilder.append(number.toString()).append(", ");
+            stringBuilder.append(number.toString()).append("', '");
         }
         for(String time:timeList){
-            stringBuilder.append(time).append(", ");
+            stringBuilder.append(time).append("', '");
         }
-        int index = stringBuilder.lastIndexOf(", ");
+        int index = stringBuilder.lastIndexOf(", '");
         if (index > -1) {
-            stringBuilder.replace(index, index + 2, "");
+            stringBuilder.replace(index, index + 3, "");
         }
-        stringBuilder.append("]}");
+        stringBuilder.append("]");
         return stringBuilder.toString();
     }
 

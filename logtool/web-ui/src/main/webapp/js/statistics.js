@@ -10,15 +10,94 @@ Ext.onReady(function(){
     loc = loc.substring(0, loc.lastIndexOf('/'));
 
     var statisticQuery = "";
-    var statisticResult;
+    var statisticResult = [];
     var startDate;
     var endDate;
     var stepOfDiscretization;
 
     Ext.QuickTips.init();
 
+    function submitCustomDate() {
+        var fromDate = Ext.getCmp('from-date-field');
+        var fromTime = Ext.getCmp('from-time-field');
+        var toDate = Ext.getCmp('to-date-field');
+        var toTime = Ext.getCmp('to-time-field');
+        if(fromDate.validate() || fromTime.validate()) {
+            if(!fromDate.validate()) {
+                fromDate.setValue(toDate.getValue());
+            } else if (!fromTime.validate()){
+                fromTime.setValue(toTime.getValue());
+            }
+            var fromValue = fromDate.getSubmitValue() + 'T' + fromTime.getSubmitValue() + 'Z';
+            var toValue = toDate.getSubmitValue() + 'T' + toTime.getSubmitValue() + 'Z';
+            filtersPanel.getForm().findField('start-date').setValue(fromValue);
+            filtersPanel.getForm().findField('end-date').setValue(toValue);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function makeStatistics() {
+        startDate = filtersPanel.getForm().findField('start-date').getValue();
+        endDate = filtersPanel.getForm().findField('end-date').getValue();
+        stepOfDiscretization = filtersPanel.getForm().findField('step').getValue();
+        composeQuery();
+
+        if (statisticQuery != "" && stepOfDiscretization != 0) {
+            Ext.Ajax.request({
+                url : loc + '/logtool' ,
+                params : {
+                    action: 'makeStatistics',
+                    query: statisticQuery,
+                    step: stepOfDiscretization,
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                method: 'GET',
+                success: function (result, request) {
+                    statisticResult = Ext.decode(result.responseText);
+                    store.loadData(generateData());
+                },
+                failure: function (result, request) {
+                    Ext.MessageBox.alert('Failed', result.responseText);
+                }
+            });
+        }
+    }
+
+    function composeQuery() {
+        statisticQuery = "";
+        var fieldValues = filtersPanel.getForm().getValues();
+        delete fieldValues['end-date'];//remove endDate
+        delete fieldValues['start-date'];//remove startDate
+        delete fieldValues['step'];//remove step
+        for (fieldValue in fieldValues) {
+            if (fieldValues[fieldValue] != "") {
+                statisticQuery += fieldValue + ":" + fieldValues[fieldValue] + "|";
+            }
+        }
+        statisticQuery = statisticQuery.substring(0, statisticQuery.length - 1);
+        return statisticQuery;
+    }
+
+    function generateData() {
+        var halfLength = statisticResult.length / 2;
+        var data = [], i, strTime;
+        for (i = 0; i < halfLength; ++i) {
+            strTime = statisticResult[i + halfLength];
+            strTime = strTime.substring(0, strTime.length - 1).replace("T"," ");
+            data.push({
+                time: strTime,
+                count: parseInt(statisticResult[i])
+            });
+        }
+        return data;
+    }
+
 	var filtersPanel = Ext.create('Ext.form.Panel', {
         bodyPadding: 5,
+        height: 600,
         layout: 'anchor',
         defaults: {
             anchor: '100%'
@@ -74,6 +153,8 @@ Ext.onReady(function(){
             text: 'Reset',
             handler: function() {
                 this.up('form').getForm().reset();
+                statisticResult = [];
+                store.loadData(generateData());
             }
         },{
             text: 'Submit',
@@ -98,7 +179,7 @@ Ext.onReady(function(){
                 allowBlank: false,
                 editable: false,
                 maxValue: new Date(),
-                value: new Date(), //TODO: DELETE THIS
+                value: new Date(),
                 anchor: '100%'
             }, {
                 xtype: 'timefield',
@@ -107,7 +188,7 @@ Ext.onReady(function(){
                 format: 'H:i:s',
                 allowBlank: false,
                 editable: false,
-                value: new Date(),  //TODO: DELETE THIS
+                value: new Date(),
                 anchor: '100%'
             }, {
                 xtype: 'datefield',
@@ -149,76 +230,63 @@ Ext.onReady(function(){
         ]
     })
 
-    function submitCustomDate() {
-        var fromDate = Ext.getCmp('from-date-field');
-        var fromTime = Ext.getCmp('from-time-field');
-        var toDate = Ext.getCmp('to-date-field');
-        var toTime = Ext.getCmp('to-time-field');
-        if(fromDate.validate() || fromTime.validate()) {
-            if(!fromDate.validate()) {
-                fromDate.setValue(toDate.getValue());
-            } else if (!fromTime.validate()){
-                fromTime.setValue(toTime.getValue());
-            }
-            var fromValue = fromDate.getSubmitValue() + 'T' + fromTime.getSubmitValue() + 'Z';
-            var toValue = toDate.getSubmitValue() + 'T' + toTime.getSubmitValue() + 'Z';
-            filtersPanel.getForm().findField('start-date').setValue(fromValue);
-            filtersPanel.getForm().findField('end-date').setValue(toValue);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    var store = Ext.create('Ext.data.JsonStore', {
+        fields:['time', 'count'],
+        data: generateData()
+    });
 
-    function makeStatistics() {
-        startDate = filtersPanel.getForm().findField('start-date').getValue();
-        endDate = filtersPanel.getForm().findField('end-date').getValue();
-        stepOfDiscretization = filtersPanel.getForm().findField('step').getValue();
-        statisticQuery = composeQuery();
+    var columnChart = Ext.create('Ext.chart.Chart', {
+        animate: true,
+        shadow: true,
+        store: store,
+        style: 'background:#fff',
+        axes: [{
+            type: 'Category',
+            position: 'bottom',
+            fields: ['time'],
+            title: 'Timestamp',
 
-        Ext.Ajax.request({
-            url : loc + '/logtool' ,
-            params : {
-                action: 'makeStatistics',
-                query: statisticQuery,
-                step: stepOfDiscretization,
-                startDate: startDate,
-                endDate: endDate
+        }, {
+            type: 'Numeric',
+            position: 'left',
+            fields: ['count'],
+            title: 'Number of occurrences',
+            grid: true,
+            minimum: 0
+        }],
+        series: [{
+            type: 'column',
+            axis: 'left',
+            highlight: true,
+            tips: {
+                trackMouse: true,
+                width: 124,
+                height: 36,
+                renderer: function(storeItem, item) {
+                    this.setTitle(storeItem.get('time') + ' : ' + storeItem.get('count') + ' occurrences');
+                }
             },
-            method: 'GET',
-            success: function (result, request) {
-                statisticResult = Ext.decode(result.responseText);
-                Ext.MessageBox.alert('Success', result.responseText);
-            },
-            failure: function (result, request) {
-                Ext.MessageBox.alert('Failed', result.responseText);
-            }
-        });
-    }
+            xField: 'time',
+            yField: 'count'
+        }]
+    });
 
-    function composeQuery() {
-        statisticQuery = "";
-        var content = filtersPanel.getForm().findField('content').getValue();
-        var tags = filtersPanel.getForm().findField('tags').getValue();
-        var level = filtersPanel.getForm().findField('level').getValue();
-        var host = filtersPanel.getForm().findField('host').getValue();
-        var application = filtersPanel.getForm().findField('application').getValue();
-        var instance = filtersPanel.getForm().findField('instance').getValue();
-        if (content != "") statisticQuery += 'content:' + content;
-        if (tags != "") statisticQuery += ' tags:' + tags;
-        if (level != "") statisticQuery += ' level:' + level;
-        if (host != "") statisticQuery += ' host:' + host;
-        if (application != "") statisticQuery += ' application' + application;
-        if (instance != "") statisticQuery += ' instance' + instance;
-        return statisticQuery;
-    }
 
+    var chartPanel = Ext.create('Ext.form.Panel', {
+        frame:true,
+        width: '50%',
+        height: 600,
+        bodyStyle:'padding: 0',
+        title: 'Column Chart',
+        layout: 'fit',
+        items: [columnChart]
+    });
 
     var queryField = Ext.create('Ext.form.field.Text', {
             id: 'query-field',
             emptyText: 'Type solr query here...',
-            size: 200
-        });
+            size: 80
+    });
 
     var graphViewer = Ext.create('Ext.form.Panel', {
             frame:true,
@@ -226,8 +294,9 @@ Ext.onReady(function(){
             width: '100%',
             height: '100%',
             layout:'column',
-        });
-
+            items: [chartPanel]
+    });
+//
     var statisticsPanel = Ext.create('Ext.form.Panel', {
         frame:true,
         bodyStyle:'padding: 0',
@@ -238,11 +307,11 @@ Ext.onReady(function(){
         items: [{
 		    title: 'Filters',
 		    columnWidth: 3/10,
-            items: filtersPanel
+            items: [filtersPanel]
 		},{
-		    title: 'Statistics viewboard',
+		    title: 'Statistics browser',
 		    columnWidth: 7/10,
-		    items: [queryField, graphViewer]
+		    items: [chartPanel]
 		}],
 		dockedItems : [{
 			xtype : 'toolbar',
@@ -261,5 +330,4 @@ Ext.onReady(function(){
     });
 
     statisticsPanel.render(document.getElementById("content"));
-
 });
