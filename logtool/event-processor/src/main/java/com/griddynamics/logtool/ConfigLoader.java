@@ -31,12 +31,11 @@ public class ConfigLoader {
         if (!tokenFileStream.exists()) {
             InputStream in = ConfigLoader.class.getResourceAsStream(System.getProperty("file.separator") + fileName);
             tokenScanner = new Scanner(in);
-        } else if (!tokenFileStream.isFile()) {
-            throw new IOException("config file exists and not a file");
-        } else {
+        } else if (tokenFileStream.isFile()) {
             tokenScanner = new Scanner(tokenFileStream);
+        } else {
+            throw new IOException("config file exists and not a file");
         }
-
 
         String regexp = "(.*?)\\s*?[=:-]\\s*(.*)";
         PatternCompiler compiler = new Perl5Compiler();
