@@ -58,6 +58,7 @@ Ext.onReady(function(){
                 success: function (result, request) {
                     statisticResult = Ext.decode(result.responseText);
                     store.loadData(generateData());
+                    pieStore.loadData(generateDataToPieChart());
                 },
                 failure: function (result, request) {
                     Ext.MessageBox.alert('Failed', result.responseText);
@@ -69,9 +70,11 @@ Ext.onReady(function(){
     function composeQuery() {
         statisticQuery = "";
         var fieldValues = filtersPanel.getForm().getValues();
-        delete fieldValues['end-date'];//remove endDate
-        delete fieldValues['start-date'];//remove startDate
-        delete fieldValues['step'];//remove step
+
+        //delete fields below because they will be passed as separate parameters
+        delete fieldValues['end-date'];
+        delete fieldValues['start-date'];
+        delete fieldValues['step'];
         for (fieldValue in fieldValues) {
             if (fieldValues[fieldValue] != "") {
                 statisticQuery += fieldValue + ":" + fieldValues[fieldValue] + "|";
@@ -95,9 +98,27 @@ Ext.onReady(function(){
         return data;
     }
 
+    function generateDataToPieChart() {
+        var halfLength = statisticResult.length / 2;
+        var data = [], i, strTime;
+        for (i = 0; i < halfLength; ++i) {
+            var val = parseInt(statisticResult[i]);
+            if (val != 0) {
+                strTime = statisticResult[i + halfLength];
+                strTime = strTime.substring(0, strTime.length - 1).replace("T"," ");
+                data.push({
+                    time: strTime,
+                    count: val
+                });
+            }
+        }
+        return data;
+    }
+
+
 	var filtersPanel = Ext.create('Ext.form.Panel', {
         bodyPadding: 20,
-        height: 600,
+        height: 320,
         layout: 'anchor',
         defaults: {
             anchor: '100%'
@@ -155,6 +176,7 @@ Ext.onReady(function(){
                 this.up('form').getForm().reset();
                 statisticResult = [];
                 store.loadData(generateData());
+                pieStore.loadData(generateDataToPieChart());
             }
         },{
             text: 'Submit',
@@ -236,14 +258,19 @@ Ext.onReady(function(){
         data: generateData()
     });
 
+    var pieStore = Ext.create('Ext.data.JsonStore', {
+        fields:['time', 'count'],
+        data: generateDataToPieChart()
+    });
+
     var pieChart = Ext.create('Ext.chart.Chart', {
         animate: true,
         shadow: true,
-        store: store,
+        store: pieStore,
         style: 'background:#fff',
         shadow: true,
         legend: {
-        position: 'right'
+            position: 'right'
         },
         series: [{
             type: 'pie',
@@ -286,12 +313,15 @@ Ext.onReady(function(){
             type: 'column',
             axis: 'left',
             highlight: true,
+            style: {
+                fill:'rgb(65,105,225)'
+            },
             tips: {
                 trackMouse: true,
                 width: 124,
                 height: 36,
                 renderer: function(storeItem, item) {
-                    this.setTitle(storeItem.get('time') + ' : ' + storeItem.get('count') + ' occurrences');
+                    this.setTitle(storeItem.get('time') + '  ' + storeItem.get('count') + ' occurrences');
                 }
             },
             xField: 'time',
@@ -302,9 +332,9 @@ Ext.onReady(function(){
     var pieChartPanel = Ext.create('Ext.form.Panel', {
         frame:true,
         columnWidth: 1/2,
-        height: 600,
+        height: '80%',
         bodyStyle:'padding: 0',
-        title: 'Pie Chart',
+        title: 'ddd Pie Chart',
         layout: 'fit',
         items: [pieChart]
     });
@@ -312,7 +342,7 @@ Ext.onReady(function(){
     var columnChartPanel = Ext.create('Ext.form.Panel', {
         frame:true,
         columnWidth: 1/2,
-        height: 600,
+        height: '80%',
         bodyStyle:'padding: 0',
         title: 'Column Chart',
         layout: 'fit',
@@ -325,15 +355,6 @@ Ext.onReady(function(){
             size: 80
     });
 
-    var graphViewer = Ext.create('Ext.form.Panel', {
-            frame:true,
-            bodyStyle:'padding: 0',
-            width: '100%',
-            height: '100%',
-            layout:'column',
-            items: [columnChartPanel]
-    });
-//
     var statisticsPanel = Ext.create('Ext.form.Panel', {
         frame:true,
         bodyStyle:'padding: 0',
@@ -343,11 +364,13 @@ Ext.onReady(function(){
 
         items: [{
 		    title: 'Filters',
-		    columnWidth: 3/10,
+		    columnWidth: 2/10,
+		    height: '100%',
             items: [filtersPanel]
 		},{
 		    title: 'Statistics browser',
-		    columnWidth: 7/10,
+		    columnWidth: 8/10,
+		    height: '100%',
 		    layout:'column',
 		    items: [columnChartPanel, pieChartPanel]
 		}],

@@ -57,14 +57,14 @@ public class SyslogServerHandler extends SimpleChannelHandler {
             receivedMessage.append((char) buf.readByte());
         }
 
-        TaggedMessage taggedMsg = eventProcessor.process(receivedMessage.toString());
-        Map<String,String> parsedMsg = messageParser.parseMessage(taggedMsg.getMessage());
+        Map<String,String> parsedMsg = messageParser.parseMessage(receivedMessage.toString());
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.putAll(parsedMsg);
         msg.put("host", host);
         if(msg.get("content") == null){
             msg.put("content",receivedMessage.toString());
         }
+        TaggedMessage taggedMsg = eventProcessor.process(msg.get("content").toString());
         if(msg.get("timestamp") == null){
            DateTime dt = new DateTime();
            String timestamp = dateTimeFormatter.print(dt);
