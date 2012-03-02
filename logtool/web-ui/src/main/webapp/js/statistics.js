@@ -334,7 +334,7 @@ Ext.onReady(function(){
         columnWidth: 1/2,
         height: '80%',
         bodyStyle:'padding: 0',
-        title: 'ddd Pie Chart',
+        title: 'Pie Chart',
         layout: 'fit',
         items: [pieChart]
     });
